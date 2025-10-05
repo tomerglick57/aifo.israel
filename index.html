@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>הנה פה!</title>
+  <style>
+    :root { --mode: contain; } /* contain keeps whole SVG visible; use cover to fill */
+    html, body {
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: #ffffff;
+    }
+    body {
+      display: grid;
+      place-items: center;
+    }
+    img, object, iframe {
+      width: 100vw;
+      height: 100vh;
+      object-fit: var(--mode); /* contain or cover */
+    }
+  </style>
+</head>
+<body>
+  
+  <img src="2.svg" alt="SVG" />
+
+  <!-- אני יודע, זה לא כזה מצחיק. -->
+ 
+</body>
+</html>
