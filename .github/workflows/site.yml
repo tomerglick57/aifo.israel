@@ -1,0 +1,87 @@
+name: Site CI and CD
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+    tags:
+      - "v*"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Optional toolchain if you decide to add a build step later
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Lint HTML if package.json exists
+        run: |
+          if [ -f package.json ]; then npm ci && npx htmlhint "public/**/*.html"; else echo "No build. Skipping."; fi
+
+  deploy_staging:
+    needs: [ test ]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prepare release name
+        id: prep
+        run: echo "REL=${GITHUB_RUN_ID}" >> $GITHUB_OUTPUT
+
+      - name: Rsync to staging release dir
+        uses: burnett01/rsync-deployments@7.0.1
+        with:
+          switches: -avzr --delete
+          path: public/
+          remote_path: ${{ secrets.STAGING_SITE_ROOT }}/releases/${{ steps.prep.outputs.REL }}/public/
+          remote_host: ${{ secrets.STAGING_HOST }}
+          remote_user: ${{ secrets.SSH_USER }}
+          remote_key: ${{ secrets.SSH_KEY }}
+
+      - name: Activate staging
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.STAGING_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            /home/deploy/deploy_static.sh ${{ secrets.STAGING_SITE_ROOT }} ${{ github.run_id }}
+
+  deploy_prod:
+    needs: [ test ]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://xn--4dbio8b.xn--4dbrk0ce
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prepare release name
+        id: prep
+        run: echo "REL=${GITHUB_RUN_ID}" >> $GITHUB_OUTPUT
+
+      - name: Rsync to prod release dir
+        uses: burnett01/rsync-deployments@7.0.1
+        with:
+          switches: -avzr --delete
+          path: public/
+          remote_path: ${{ secrets.PROD_SITE_ROOT }}/releases/${{ steps.prep.outputs.REL }}/public/
+          remote_host: ${{ secrets.PROD_HOST }}
+          remote_user: ${{ secrets.SSH_USER }}
+          remote_key: ${{ secrets.SSH_KEY }}
+
+      - name: Activate production
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.PROD_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            /home/deploy/deploy_static.sh ${{ secrets.PROD_SITE_ROOT }} ${{ github.run_id }}
