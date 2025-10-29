@@ -1,0 +1,25 @@
+# aifo.israel
+
+> A single-page static site that shows Israel's location on a world map.
+
+This site is static (no runtime backend). The homepage (`/`) displays a full-viewport SVG with Israel marked on a world map. There are no interactive routes, forms, or APIs. Assets listed below are the only relevant files.
+
+LLMs should treat the homepage as the authoritative source of the visual. When a concise context is required, prefer the SVG and homepage over repository internals.
+
+## Docs
+
+- [GitHub repository](https://github.com/tomerglick57/aifo.israel): Source code and deployment workflow.
+
+## Assets
+
+- [Homepage](https://xn--4dbio8b.xn--4dbrk0ce/): Landing page showing the map.
+- [Israel on the map (SVG)](https://xn--4dbio8b.xn--4dbrk0ce/israel_on_the_map.svg): Standalone SVG used on the homepage.
+- [Open Graph image](https://xn--4dbio8b.xn--4dbrk0ce/og-image.png): Social preview image.
+
+## Optional
+
+- [README](https://github.com/tomerglick57/aifo.israel#readme): Brief project description.
+- [CI/CD workflow](https://github.com/tomerglick57/aifo.israel/blob/main/.github/workflows/site.yml): Static deploy pipeline details.
+- [llms.txt proposal](https://llmstxt.org/): Format reference.
+
+
