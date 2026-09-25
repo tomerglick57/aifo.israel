@@ -14,14 +14,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Optional toolchain if you decide to add a build step later
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
 
-      - name: Lint HTML if package.json exists
-        run: |
-          if [ -f package.json ]; then npm ci && npx htmlhint "public/**/*.html"; else echo "No build. Skipping."; fi
+      - name: Lint HTML
+        run: npx --yes htmlhint@1 "public/**/*.html"
+
+      - name: Check SVGs and social preview image
+        run: python3 scripts/check_site.py
 
   deploy_staging:
     needs: [ test ]
