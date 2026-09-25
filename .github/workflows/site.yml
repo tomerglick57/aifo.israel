@@ -35,7 +35,7 @@ jobs:
         id: prep
         run: echo "REL=${GITHUB_RUN_ID}" >> $GITHUB_OUTPUT
 
-      - name: Create remote prod release directory
+      - name: Create remote staging release directory
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.STAGING_HOST }}
