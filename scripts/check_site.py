@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Sanity checks for the static site in public/. Exits non-zero on failure."""
+import json
 import re
 import struct
 import sys
@@ -15,6 +16,13 @@ for svg in sorted(PUBLIC.glob("*.svg")):
         ET.parse(svg)
     except ET.ParseError as e:
         errors.append(f"{svg.name}: invalid XML: {e}")
+
+# Every JSON file is an API response; one stray comma breaks every client.
+for path in sorted(PUBLIC.rglob("*.json")):
+    try:
+        json.loads(path.read_text(encoding="utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as e:
+        errors.append(f"{path.relative_to(PUBLIC)}: invalid JSON: {e}")
 
 # og-image.png must really be the size index.html declares for it.
 html = (PUBLIC / "index.html").read_text(encoding="utf-8")
