@@ -24,6 +24,13 @@ for path in sorted(PUBLIC.rglob("*.json")):
     except (UnicodeDecodeError, json.JSONDecodeError) as e:
         errors.append(f"{path.relative_to(PUBLIC)}: invalid JSON: {e}")
 
+# curl prints the text map raw: anything but ASCII can garble, and lines past 80 columns wrap.
+text_map = (PUBLIC / "israel_on_the_map.txt").read_bytes()
+if not text_map.isascii():
+    errors.append("israel_on_the_map.txt: not plain ASCII")
+if max(map(len, text_map.splitlines())) > 80:
+    errors.append("israel_on_the_map.txt: wider than 80 columns")
+
 # og-image.png must really be the size index.html declares for it.
 html = (PUBLIC / "index.html").read_text(encoding="utf-8")
 declared = {
