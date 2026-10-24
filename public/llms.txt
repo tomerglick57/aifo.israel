@@ -14,6 +14,7 @@ LLMs should treat the homepage as the authoritative source of the visual. When a
 
 - [Homepage](https://xn--4dbio8b.xn--4dbrk0ce/): Landing page showing the map.
 - [Israel on the map (SVG)](https://xn--4dbio8b.xn--4dbrk0ce/israel_on_the_map.svg): Standalone SVG used on the homepage.
+- [Israel on the map (text)](https://xn--4dbio8b.xn--4dbrk0ce/israel_on_the_map.txt): Plain-ASCII version of the map; curl, wget and HTTPie get it at `/` instead of the HTML page.
 - [Open Graph image](https://xn--4dbio8b.xn--4dbrk0ce/og-image.png): Social preview image.
 - [Where is Israel? (JSON API)](https://xn--4dbio8b.xn--4dbrk0ce/api/v1/where.json): Static JSON with Israel's latitude/longitude, ISO country code, and the homepage's answer.
 
